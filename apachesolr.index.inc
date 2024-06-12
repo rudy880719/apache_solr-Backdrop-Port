@@ -1140,7 +1140,7 @@ function apachesolr_term_reference_indexing_callback($node, $field_name, $index_
           'value' => $ancestor->tid,
         );
         $fields[] = array(
-          'key' => 'im_vid_' . $ancestor->vid,
+          'key' => 'im_vid_' . $ancestor->tid,
           'value' => $ancestor->tid,
         );
         $name = apachesolr_clean_text($ancestor->name);
@@ -1148,7 +1148,7 @@ function apachesolr_term_reference_indexing_callback($node, $field_name, $index_
         // We index each name as a string for cross-site faceting
         // using the vocab name rather than vid in field construction .
         $fields[] = array(
-          'key' => 'sm_vid_' . apachesolr_vocab_name($ancestor->vid),
+          'key' => 'sm_vid_' . apachesolr_vocab_name($ancestor->tid),
           'value' => $name,
         );
       }
@@ -1174,7 +1174,7 @@ function apachesolr_vocab_name($vid) {
   $names = &backdrop_static(__FUNCTION__, array());
 
   if (!isset($names[$vid])) {
-    $vocab_name = db_query('SELECT v.name FROM {taxonomy_vocabulary} v WHERE v.vid = :vid', array(':vid' => $vid))->fetchField();
+    $vocab_name = db_query('SELECT v.name FROM {taxonomy_term_data} v WHERE v.tid = :vid', array(':vid' => $vid))->fetchField();
     $names[$vid] = preg_replace('/[^a-zA-Z0-9_\x7f-\xff]/', '_', $vocab_name);
     // Fallback for names ending up all as '_'.
     $check = rtrim($names[$vid], '_');

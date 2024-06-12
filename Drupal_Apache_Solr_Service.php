@@ -545,7 +545,7 @@ class DrupalApacheSolrService implements DrupalApacheSolrServiceInterface {
   /**
    * Central method for making the actual http request to the Solr Server
    *
-   * This is just a wrapper around drupal_http_request().
+   * This is just a wrapper around backdrop_http_request().
    */
   protected function _makeHttpRequest($url, array $options = array()) {
     if (!isset($options['method']) || $options['method'] == 'GET' || $options['method'] == 'HEAD') {

@@ -135,6 +135,7 @@ function apachesolr_search_page_list_blocks() {
   $config->get('apachesolr_search_mlt_blocks');
   $build = array();
   $rows = array();
+
   // Build the sortable table header.
   $header = array(
     'label' => array('data' => t('Name'), 'field' => 's.label'),
@@ -163,8 +164,7 @@ function apachesolr_search_page_list_blocks() {
   }
 
   // Automatically enlarge our header with the operations size
-  $array = (array) $rows;
-  $header['operations']['colspan'] = count(reset($array)) - 2;
+  $header['operations']['colspan'] = count(reset($rows)) - 2;
 
   $build['list'] = array(
     '#prefix' => '<h3>Blocks "More Like This"</h3>',

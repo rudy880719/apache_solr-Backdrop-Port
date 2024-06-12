@@ -552,15 +552,12 @@ function apachesolr_search_block_view($delta = '') {
     }
   }
   elseif (($node = menu_get_object()) && (!arg(2) || arg(2) == 'view')) {
-
     $suggestions = array();
     // Determine whether the user can view the current node. Probably not necessary.
     $block = apachesolr_search_mlt_block_load($delta);
-
     if ($block && node_access('view', $node)) {
       // Get our specific environment for the MLT block
       $env_id = (!empty($block['mlt_env_id'])) ? $block['mlt_env_id'] : '';
-
       try {
         $solr = apachesolr_get_solr($env_id);
         $context['search_type'] = 'apachesolr_search_mlt';
@@ -634,7 +631,7 @@ function apachesolr_search_load_all_search_pages() {
   // If ctools module is enabled, add search pages from code, e.g. from a
   // feature module.
   if (module_exists('facetapi')) {
-    module_invoke_all('wizards');
+    apachesolr_search_wizards();
     $defaults = facetapi_export_load_object('apachesolr_search_page', 'all');
     foreach ($defaults as $page_id => $default) {
       $search_pages[$page_id] = (array) $default;
@@ -689,6 +686,7 @@ function apachesolr_search_mlt_block_load($block_id) {
  * @return An array of response documents, or NULL
  */
 function apachesolr_search_mlt_suggestions($settings, $id, $solr = NULL, $context = array()) {
+
   try {
     $fields = array(
       'mlt_mintf' => 'mlt.mintf',
@@ -709,6 +707,7 @@ function apachesolr_search_mlt_suggestions($settings, $id, $solr = NULL, $contex
     );
     // We can optionally specify a Solr object.
     $query = apachesolr_drupal_query('apachesolr_mlt', $params, '', '', $solr, $context);
+
     foreach ($fields as $form_key => $name) {
       if (!empty($settings[$form_key])) {
         $query->addParam($name, $settings[$form_key]);
@@ -723,6 +722,7 @@ function apachesolr_search_mlt_suggestions($settings, $id, $solr = NULL, $contex
     if (!empty($settings['mlt_custom_filters'])) {
       $custom_filters = explode(',', $settings['mlt_custom_filters']);
       foreach ($custom_filters as $custom_filter) {
+        $a = explode(':', $custom_filter, 2);
         list($filter_index, $filter_value) = explode(':', $custom_filter, 2);
         $query->addFilter($filter_index, $filter_value);
       }
@@ -735,7 +735,6 @@ function apachesolr_search_mlt_suggestions($settings, $id, $solr = NULL, $contex
     }
 
     $response = $query->search();
-
 
     if (isset($response->response->docs)) {
       return (array) $response->response->docs;

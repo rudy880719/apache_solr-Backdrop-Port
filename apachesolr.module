@@ -1243,7 +1243,7 @@ function apachesolr_load_all_environments() {
   else {
     // If ctools is available use its crud functions to load the environments.
     if (module_exists('facetapi')) {
-      module_invoke_all('wizards');
+      apachesolr_wizards();
       $environments = facetapi_export_load_object('apachesolr_environment', 'all');
       // Convert environments to array.
       foreach ($environments as &$environment) {
@@ -1411,7 +1411,7 @@ function apachesolr_environments_clear_cache() {
   backdrop_static_reset('apachesolr_load_all_environments');
   backdrop_static_reset('apachesolr_get_solr');
   if (module_exists('facetapi')) {
-    module_invoke_all('wizards');
+    apachesolr_wizards();
     facetapi_export_load_object('apachesolr_environment');
   }
 }
@@ -1602,8 +1602,6 @@ function apachesolr_do_query(DrupalSolrQueryInterface $current_query) {
   $keys = htmlspecialchars($keys, ENT_NOQUOTES, 'UTF-8');
   $keys = str_replace("'", '&#039;', $keys);
   $response = $query->search($keys);
-  print_r('aqui');
-  die;
   // The response is cached so that it is accessible to the blocks and anything
   // else that needs it beyond the initial search.
   apachesolr_static_response_cache($searcher, $response);
@@ -3043,7 +3041,7 @@ function apachesolr_wizards() {
  *   White space for indentation from CTools.
  */
 function apachesolr_ctools_environment_export($environment, $indent) {
-  module_invoke_all('wizards');
+  apachesolr_wizards();
   $environment = (object) $environment;
   // Re-load the enviroment, since in some cases the conf
   // is stripped since it's not in the actual schema.

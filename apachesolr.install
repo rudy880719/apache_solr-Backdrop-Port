@@ -86,11 +86,11 @@ function apachesolr_enable() {
   apachesolr_index_mark_for_reindex($env_id);
 }
 
-
 /**
  * Implements hook_schema().
  */
 function apachesolr_schema() {
+
   $table = backdrop_get_schema_unprocessed('system', 'cache');
   $table['description'] = 'Cache table for apachesolr to store Luke data and indexing information.';
   $schema['cache_apachesolr'] = $table;
@@ -187,8 +187,8 @@ function apachesolr_schema() {
 
   //Predefine an amount of types that get their own table
   $types = array(
-    'other' => 'apachesolr_index_entities',
-    'node' => 'apachesolr_index_entities_node',
+      'other' => 'apachesolr_index_entities',
+      'node' => 'apachesolr_index_entities_node',
   );
   foreach ($types as $type => $table) {
     $schema[$table] = array(
@@ -296,7 +296,7 @@ function apachesolr_update_7000() {
   $schema['apachesolr_server'] = array(
     'description' => 'The Solr server table.',
     'fields' => array(
-      'server_id' => array(
+     'server_id' => array(
         'description' => 'Unique identifier for the server',
         'type' => 'varchar',
         'length' => 64,
@@ -347,9 +347,9 @@ function apachesolr_update_7000() {
   );
   db_create_table('apachesolr_server', $schema['apachesolr_server']);
   // Insert into the table the current single server record.
-  $host = $config->get('apachesolr_host', 'localhost');
-  $port = $config->get('apachesolr_port', '8983');
-  $path =  $config->get('apachesolr_path', '/solr');
+  $host = $config->get('apachesolr_host');
+  $port = $config->get('apachesolr_port');
+  $path =  $config->get('apachesolr_path');
   db_insert('apachesolr_server')->fields(array('server_id' => 'solr', 'name' => 'Apache Solr server', 'host' => $host, 'port' => $port, 'path' => $path))->execute();
   $config->set('apachesolr_default_server', 'solr');
   $config->clear('apachesolr_host');
@@ -401,7 +401,7 @@ function apachesolr_update_7002() {
   $schema['apachesolr_server_variable'] = array(
     'description' => 'Variable values for each Solr server.',
     'fields' => array(
-      'server_id' => array(
+     'server_id' => array(
         'description' => 'Unique identifier for the server',
         'type' => 'varchar',
         'length' => 64,
@@ -515,10 +515,10 @@ function apachesolr_update_7005() {
     foreach ($servers as $id => $server) {
       $port = $server['port'] ? ':' . $server['port'] : '';
       $url = $server['scheme'] . '://' . $server['host'] . $port . $server['path'];
-      db_update('apachesolr_server')
-        ->fields(array('url' => $url))
-        ->condition('server_id', $id)
-        ->execute();
+    db_update('apachesolr_server')
+      ->fields(array('url' => $url))
+      ->condition('server_id', $id)
+      ->execute();
     }
   }
 }
@@ -552,16 +552,16 @@ function apachesolr_update_7007() {
   db_rename_table('apachesolr_server', 'apachesolr_environment');
   db_rename_table('apachesolr_server_variable', 'apachesolr_environment_variable');
   db_change_field('apachesolr_environment', 'server_id', 'env_id', array(
-      'description' => 'Unique identifier for the environment',
-      'type' => 'varchar',
-      'length' => 64,
-      'not null' => TRUE)
+    'description' => 'Unique identifier for the environment',
+    'type' => 'varchar',
+    'length' => 64,
+    'not null' => TRUE)
   );
   db_change_field('apachesolr_environment_variable', 'server_id', 'env_id', array(
-      'description' => 'Unique identifier for the environment',
-      'type' => 'varchar',
-      'length' => 64,
-      'not null' => TRUE)
+    'description' => 'Unique identifier for the environment',
+    'type' => 'varchar',
+    'length' => 64,
+    'not null' => TRUE)
   );
   db_add_primary_key('apachesolr_environment', array('env_id'));
   db_add_primary_key('apachesolr_environment_variable', array('env_id', 'name'));
@@ -695,8 +695,8 @@ function apachesolr_update_7012() {
   // Install the new schema
   //Predefine an amount of types that get their own table
   $types = array(
-    'other' => 'apachesolr_index_entities',
-    'node' => 'apachesolr_index_entities_node',
+      'other' => 'apachesolr_index_entities',
+      'node' => 'apachesolr_index_entities_node',
   );
   foreach ($types as $type => $table) {
     $schema[$table] = array(
@@ -842,30 +842,30 @@ function apachesolr_update_7013() {
 
   db_drop_primary_key('apachesolr_index_entities');
   db_change_field('apachesolr_index_entities', 'entity_type', 'entity_type', array(
-      'description' => 'The type of entity.',
-      'type' => 'varchar',
-      'length' => 32,
-      'not null' => TRUE)
+    'description' => 'The type of entity.',
+    'type' => 'varchar',
+    'length' => 32,
+    'not null' => TRUE)
   );
   db_add_primary_key('apachesolr_index_entities', array('entity_id', 'entity_type'));
   db_change_field('apachesolr_index_entities_node', 'entity_type', 'entity_type', array(
-      'description' => 'The type of entity.',
-      'type' => 'varchar',
-      'length' => 32,
-      'not null' => TRUE)
+    'description' => 'The type of entity.',
+    'type' => 'varchar',
+    'length' => 32,
+    'not null' => TRUE)
   );
   db_drop_primary_key('apachesolr_index_bundles');
   db_change_field('apachesolr_index_bundles', 'env_id', 'env_id', array(
-      'description' => 'Unique identifier for the environment',
-      'type' => 'varchar',
-      'length' => 64,
-      'not null' => TRUE)
+    'description' => 'Unique identifier for the environment',
+    'type' => 'varchar',
+    'length' => 64,
+    'not null' => TRUE)
   );
   db_change_field('apachesolr_index_bundles', 'entity_type', 'entity_type', array(
-      'description' => 'The type of entity.',
-      'type' => 'varchar',
-      'length' => 32,
-      'not null' => TRUE)
+    'description' => 'The type of entity.',
+    'type' => 'varchar',
+    'length' => 32,
+    'not null' => TRUE)
   );
   db_add_primary_key('apachesolr_index_bundles', array('env_id', 'entity_type', 'bundle'));
 }
