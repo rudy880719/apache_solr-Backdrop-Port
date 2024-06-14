@@ -1108,7 +1108,7 @@ function apachesolr_term_reference_indexing_callback($node, $field_name, $index_
 
   $fields = array();
   $vocab_names = array();
-  if (!empty($node->{$field_name}) && function_exists('taxonomy_get_parents_all')) {
+  if (!empty($node->{$field_name}) && function_exists('taxonomy_term_load_parents_all')) {
     $field = $node->$field_name;
     $items = current($field);
     foreach ($items as $item) {
@@ -1144,7 +1144,7 @@ function apachesolr_term_reference_indexing_callback($node, $field_name, $index_
           'value' => $ancestor->tid,
         );
         $name = apachesolr_clean_text($ancestor->name);
-        $vocab_names[$ancestor->vid][] = $name;
+        $vocab_names[$ancestor->tid][] = $name;
         // We index each name as a string for cross-site faceting
         // using the vocab name rather than vid in field construction .
         $fields[] = array(

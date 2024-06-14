@@ -29,7 +29,7 @@
     "apachesolr_index_last": [],
     "apachesolr_index_updated": [],
     "apachesolr_last_optimize": 0,
-    "apachesolr_site_hash": false,
+    "apachesolr_site_hash": "",
     "apachesolr_optimize_interval": 86400,
     "apachesolr_optimize_attempt_interval": 3600,
     "apachesolr_cache_delay": 300,

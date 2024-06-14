@@ -570,11 +570,13 @@ function apachesolr_failure($search_name, $querystring) {
  */
 function apachesolr_site_hash() {
   $config = config('apachesolr.settings');
-  if (!($hash = $config->get('apachesolr_site_hash'))) {
+  $hash = $config->get('apachesolr_site_hash');
+  if (empty($config->get('apachesolr_site_hash'))) {
     global $base_url;
     // Set a random 6 digit base-36 number as the hash.
     $hash = substr(base_convert(sha1(uniqid($base_url, TRUE)), 16, 36), 0, 6);
-    $config->set('apachesolr_site_hash', $hash);
+    config_set('apachesolr.settings','apachesolr_site_hash', $hash);
+    $config->save();
   }
   return $hash;
 }
