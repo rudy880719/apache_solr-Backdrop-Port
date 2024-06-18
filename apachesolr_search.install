@@ -57,7 +57,7 @@ function apachesolr_search_enable() {
       'description' => 'Core Search',
       'search_path' => 'search/site',
       'env_id' => 'solr',
-      'page_title' => 'Site',
+      'page_title' => 'Apache Solr',
       'settings' => $settings,
     );
     db_insert('apachesolr_search_page')->fields($fields)->execute();
@@ -299,7 +299,7 @@ function apachesolr_search_update_7004() {
     'description' => 'Site search',
     'search_path' => 'search/site',
     'env_id' => 'solr',
-    'page_title' => 'Site',
+    'page_title' => 'Apache Solr',
     'settings' => $settings,
   );
   db_insert('apachesolr_search_page')->fields($fields)->execute();
