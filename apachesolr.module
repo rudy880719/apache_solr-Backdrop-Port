@@ -575,7 +575,7 @@ function apachesolr_site_hash() {
     global $base_url;
     // Set a random 6 digit base-36 number as the hash.
     $hash = substr(base_convert(sha1(uniqid($base_url, TRUE)), 16, 36), 0, 6);
-    config_set('apachesolr.settings','apachesolr_site_hash', $hash);
+    $config->set('apachesolr_site_hash', $hash);
     $config->save();
   }
   return $hash;
@@ -1234,7 +1234,7 @@ function apachesolr_load_all_environments() {
   }
   // Use cache_get to avoid DB when using memcache, etc.
   $cache = cache_get('apachesolr:environments', 'cache_apachesolr');
-  if (isset($cache->data)) {
+  if (!empty($cache->data)) {
     $environments = $cache->data;
   }
   elseif (!db_table_exists('apachesolr_index_bundles') || !db_table_exists('apachesolr_environment')) {
@@ -1243,18 +1243,7 @@ function apachesolr_load_all_environments() {
     $environments = array();
   }
   else {
-    // If ctools is available use its crud functions to load the environments.
-    if (module_exists('facetapi')) {
-      apachesolr_wizards();
-      $environments = facetapi_export_load_object('apachesolr_environment', 'all');
-      // Convert environments to array.
-      foreach ($environments as &$environment) {
-        $environment = (array) $environment;
-      }
-    }
-    else {
       $environments = db_query('SELECT * FROM {apachesolr_environment}')->fetchAllAssoc('env_id', PDO::FETCH_ASSOC);
-    }
 
     // Load conf and index bundles. We don't use 'subrecords callback' property
     // of ctools export API.
@@ -3100,10 +3089,15 @@ function apachesolr_config_info() {
 
 function apachesolr_autoload_info() {
   return array(
-    'DrupalApacheSolrService' =>'Drupal_Apache_Solr_Service.php',
-    'ApacheSolrDocument'=> 'Apache_Solr_Document.php',
-    'SolrBaseQuery'=>'Solr_Base_Query.php',
-    'SolrFilterSubQuery'=>'Solr_Base_Query.php',
-    'DrupalSolrQueryInterface'=>'apachesolr.interface.inc'
+    'DrupalApacheSolrService' => 'Drupal_Apache_Solr_Service.php',
+    'ApacheSolrDocument' => 'Apache_Solr_Document.php',
+    'SolrBaseQuery' => 'Solr_Base_Query.php',
+    'SolrFilterSubQuery' => 'Solr_Base_Query.php',
+    'DrupalSolrQueryInterface' => 'apachesolr.interface.inc',
+    'ApacheSolrFacetapiAdapter' => 'plugins/facetapi/adapter.inc',
+    'ApacheSolrFacetapiDate' => 'plugins/facetapi/query_type_date.inc',
+    'ApacheSolrFacetapiGeo' => 'plugins/facetapi/query_type_geo.inc',
+    'ApacheSolrFacetapiNumericRange' => 'plugins/facetapi/query_type_numeric_range.inc',
+    'ApacheSolrFacetapiTerm' => 'plugins/facetapi/query_type_term.inc',
   );
 }

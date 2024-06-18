@@ -1072,10 +1072,36 @@ function apachesolr_search_page_browse($empty_search_behavior, $env_id) {
  */
 function theme_apachesolr_search_browse_blocks($vars) {
   $result = '';
-  if ($vars['content']['#children']) {
-    $result .= "<div class='apachesolr-browse-blocks'>\n<h2>" . t('Browse available categories') . "</h2>\n";
-    $result .= '<p>' . t('Pick a category to launch a search.') . "</p>\n";
-    $result .= $vars['content']['#children'] . "\n</div>\n";
+  $blocks = layout_get_layout_by_path()->content;
+  $pass = FALSE;
+  foreach ($blocks as $block) {
+    $plugin = $block->plugin;
+    $plug = explode(":", $plugin);
+    if ($plug[0] == 'facetapi') {
+      $pass = TRUE;
+      break;
+    }
+  }
+  if ($pass) {
+    if ($vars['content']['#children']) {
+      $result .= "<div class='apachesolr-browse-blocks'>\n<h2>" . t('Browse available categories ') . "</h2>\n";
+      $result .= '<p>' . t('Pick a category to launch a search.') . "</p>\n";
+      $result .= $vars['content']['#children'] . "\n</div>\n";
+    }
+
+    foreach ($blocks as $block) {
+      $plugin = $block->plugin;
+      $plug = explode(":", $plugin);
+      if ($plug[0] == 'facetapi') {
+        $result .= $block->getContent();
+
+      }
+    }
+  }
+  else {
+    $result .= "<div class='apachesolr-browse-blocks'>\n<h2>" . t('There are not activated blocks.. ') . "</h2>\n";
+    $result .= '<p>' . t('Category blocks must be activated in layout configuration.') . "</p>\n";
+    $result .= "\n</div>\n";
   }
 
   return $result;
