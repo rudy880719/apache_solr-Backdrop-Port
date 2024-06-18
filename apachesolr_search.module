@@ -1099,7 +1099,7 @@ function theme_apachesolr_search_browse_blocks($vars) {
     }
   }
   else {
-    $result .= "<div class='apachesolr-browse-blocks'>\n<h2>" . t('There are not activated blocks.. ') . "</h2>\n";
+    $result .= "<div class='apachesolr-browse-blocks'>\n<h2>" . t('There are not activated blocks. ') . "</h2>\n";
     $result .= '<p>' . t('Category blocks must be activated in layout configuration.') . "</p>\n";
     $result .= "\n</div>\n";
   }
@@ -1310,7 +1310,7 @@ function apachesolr_search_add_boost_params(DrupalSolrQueryInterface $query) {
     $params['bf'][] = "recip(div(1,max(is_comment_count,1)),$comment_steepness,10,10)^$comment_boost";
   }
   // Boost for a more recent comment or node edit.
-  list($changed_steepness, $changed_boost) = explode(':', $changed_settings);
+  [$changed_steepness, $changed_boost] = explode(':', $changed_settings);
   if ($changed_boost) {
     $ab = 4 / $changed_steepness;
     $params['bf'][] = "recip(ms(NOW,ds_changed),3.16e-11,$ab,$ab)^$changed_boost";
